@@ -27,7 +27,7 @@ Work through these in order, one commit per task. Each task = one commit.
 
 ## Phase 3 — Tools
 - [x] `feat: add search_similar_scenes tool`
-- [ ] `test: add tests for search_similar_scenes`
+- [x] `test: add tests for search_similar_scenes`
 - [ ] `feat: add get_scene_details tool`
 - [ ] `test: add tests for get_scene_details`
 - [ ] `feat: add list_indexed_movies tool`
