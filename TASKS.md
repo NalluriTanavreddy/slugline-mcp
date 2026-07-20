@@ -38,7 +38,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add find_mood_reference_scenes tool`
 - [x] `test: add tests for find_mood_reference_scenes`
 - [x] `refactor: hybrid tag-match + semantic-fallback search for find_mood_reference_scenes`
-- [ ] `test: cover tag-match and semantic-fallback paths for find_mood_reference_scenes`
+- [x] `test: cover tag-match and semantic-fallback paths for find_mood_reference_scenes`
 - [x] `feat: register all tools in server`
 - [x] `refactor: clean up tool response formatting`
 
