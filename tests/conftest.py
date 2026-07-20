@@ -15,6 +15,8 @@ SAMPLE_SCENES = [
             "scene_index": 0,
             "slugline": "INT. TAXI -- DAY",
             "characters": "DRIVER, RIDER",
+            "mood": "tense",
+            "mood_score": 0.6,
         },
     },
     {
@@ -26,6 +28,8 @@ SAMPLE_SCENES = [
             "scene_index": 1,
             "slugline": "EXT. FOREST -- NIGHT",
             "characters": "HIKER",
+            "mood": "dread",
+            "mood_score": 0.7,
         },
     },
     {
@@ -37,6 +41,21 @@ SAMPLE_SCENES = [
             "scene_index": 0,
             "slugline": "INT. KITCHEN -- MORNING",
             "characters": "SISTER A, SISTER B",
+            "mood": "melancholic",
+            "mood_score": 0.5,
+        },
+    },
+    {
+        "id": "tt0002_1",
+        "text": "INT. LIVING ROOM -- NIGHT\nA man checks the locks three times, convinced someone is watching the house.",
+        "metadata": {
+            "movie_name": "Another Movie",
+            "imdb_id": "tt0002",
+            "scene_index": 1,
+            "slugline": "INT. LIVING ROOM -- NIGHT",
+            "characters": "MAN",
+            "mood": "paranoid",
+            "mood_score": 0.8,
         },
     },
 ]

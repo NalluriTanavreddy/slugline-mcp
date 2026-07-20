@@ -36,7 +36,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add get_analysis_style tool for brutal-tone instructions`
 - [ ] `test: add tests for get_analysis_style`
 - [x] `feat: add find_mood_reference_scenes tool`
-- [ ] `test: add tests for find_mood_reference_scenes`
+- [x] `test: add tests for find_mood_reference_scenes`
 - [ ] `feat: register all tools in server`
 - [ ] `refactor: clean up tool response formatting`
 
