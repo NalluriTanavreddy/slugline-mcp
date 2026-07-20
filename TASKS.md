@@ -43,7 +43,7 @@ Work through these in order, one commit per task. Each task = one commit.
 ## Phase 4 — Local testing
 - [x] `docs: add MCP inspector testing instructions`
 - [x] `fix: correct tool schema validation errors`
-- [ ] `fix: handle empty retrieval results gracefully`
+- [x] `fix: handle empty retrieval results gracefully`
 - [ ] `docs: add Claude Desktop config example`
 - [ ] `docs: give README a proper badges/features/roadmap treatment`
 

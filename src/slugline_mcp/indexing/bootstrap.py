@@ -17,7 +17,7 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 from huggingface_hub.utils import HfHubHTTPError
 
-from slugline_mcp.indexing.chroma_client import DEFAULT_PERSIST_DIR
+from slugline_mcp.indexing.chroma_client import DEFAULT_PERSIST_DIR, get_chroma_client, get_scenes_collection
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +26,22 @@ INDEX_REPO_ID_ENV_VAR = "SLUGLINE_MCP_INDEX_REPO"
 
 
 def _index_exists(persist_directory: Path) -> bool:
-    """Whether a Chroma index already exists at this path."""
-    return (persist_directory / "chroma.sqlite3").exists()
+    """Whether a *populated* Chroma index already exists at this path.
+
+    Checks that the scenes collection actually has documents, not just that
+    ``chroma.sqlite3`` exists -- merely instantiating a Chroma
+    ``PersistentClient`` creates that file even with zero collections, so a
+    file-existence check alone would treat a partial/failed/never-populated
+    index as "already there" and permanently skip re-downloading it.
+    """
+    if not (persist_directory / "chroma.sqlite3").exists():
+        return False
+    try:
+        client = get_chroma_client(persist_directory)
+        collection = get_scenes_collection(client)
+        return collection.count() > 0
+    except Exception:
+        return False
 
 
 def ensure_index(
@@ -65,8 +79,8 @@ def ensure_index(
 
     if not _index_exists(persist_directory):
         raise RuntimeError(
-            f"Downloaded from '{repo_id}' but no chroma.sqlite3 was found -- "
-            "the repo may not contain a valid Chroma index."
+            f"Downloaded from '{repo_id}' but no populated Chroma index was found -- "
+            "the repo may not contain a valid (non-empty) Chroma index."
         )
 
     logger.info("Downloaded index to %s", persist_directory)
