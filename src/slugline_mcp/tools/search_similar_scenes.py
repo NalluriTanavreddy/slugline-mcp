@@ -2,17 +2,22 @@
 
 from __future__ import annotations
 
+from typing import Annotated
+
+from pydantic import Field
+
 from slugline_mcp.retrieval import get_retriever
 from slugline_mcp.tools._formatting import format_scene
 
 
-def search_similar_scenes(query: str, n_results: int = 5) -> list[dict]:
+def search_similar_scenes(
+    query: Annotated[
+        str,
+        Field(description="A scene's text (slugline, action, and/or dialogue) to find similar produced scenes for."),
+    ],
+    n_results: Annotated[int, Field(description="Maximum number of matches to return.")] = 5,
+) -> list[dict]:
     """Search the reference index for scenes similar to ``query``.
-
-    Args:
-        query: A scene's text (slugline, action, and/or dialogue) to find
-            similar produced scenes for.
-        n_results: Maximum number of matches to return (default 5).
 
     Returns:
         A list of matches, ranked most similar first. Empty if the reference

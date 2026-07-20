@@ -13,18 +13,27 @@ these results as feedback.
 
 from __future__ import annotations
 
+from typing import Annotated
+
+from pydantic import Field
+
 from slugline_mcp.retrieval import get_retriever
 from slugline_mcp.tools._formatting import format_scene
 
 
-def find_mood_reference_scenes(target_mood: str, top_k: int = 3) -> list[dict]:
+def find_mood_reference_scenes(
+    target_mood: Annotated[
+        str,
+        Field(
+            description=(
+                "The mood to rewrite toward (must match one of the moods tagged during indexing, "
+                'e.g. "paranoid", "romantic tension", "tense", "comedic", "dread", "melancholic", "triumphant").'
+            )
+        ),
+    ],
+    top_k: Annotated[int, Field(description="Maximum number of matches to return.")] = 3,
+) -> list[dict]:
     """Find reference scenes that strongly achieve a target mood.
-
-    Args:
-        target_mood: The mood to rewrite toward (must match one of the moods
-            tagged during indexing, e.g. "paranoid", "romantic tension",
-            "tense", "comedic", "dread", "melancholic", "triumphant").
-        top_k: Maximum number of matches to return (default 3).
 
     Returns:
         A list of matches ranked by embedding similarity to the mood label
