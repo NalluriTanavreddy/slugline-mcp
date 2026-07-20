@@ -41,7 +41,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `refactor: clean up tool response formatting`
 
 ## Phase 4 — Local testing
-- [ ] `docs: add MCP inspector testing instructions`
+- [x] `docs: add MCP inspector testing instructions`
 - [ ] `fix: correct tool schema validation errors`
 - [ ] `fix: handle empty retrieval results gracefully`
 - [ ] `docs: add Claude Desktop config example`
