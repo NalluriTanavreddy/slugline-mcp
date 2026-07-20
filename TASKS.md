@@ -9,7 +9,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `chore: create package folder structure`
 
 ## Phase 1 — Indexing pipeline
-- [ ] `feat: add MovieSum XML parser for splitting scripts into scenes`
+- [x] `feat: add MovieSum XML parser for splitting scripts into scenes`
 - [ ] `test: add sample script fixtures for scene parser`
 - [ ] `feat: add embedding module (sentence-transformers)`
 - [ ] `feat: add Chroma client setup`
