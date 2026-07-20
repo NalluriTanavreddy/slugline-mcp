@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "slugline-mcp"
+version = "0.0.1"
+description = "MCP server for brutal, evidence-based screenplay analysis via retrieval over a reference database of real scripts."
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "NalluriTanavreddy", email = "tanavnalluri@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "mcp>=1.2.0",
+    "chromadb>=0.5.0",
+    "sentence-transformers>=3.0.0",
+    "huggingface-hub>=0.25.0",
+]
+
+[project.optional-dependencies]
+index = [
+    "datasets>=2.20.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/NalluriTanavreddy/slugline-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/slugline_mcp"]
