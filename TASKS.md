@@ -15,7 +15,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add embedding module (sentence-transformers)`
 - [x] `feat: add Chroma client setup`
 - [x] `feat: add build_index script (loads rohitsaxena/MovieSum)`
-- [ ] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
+- [x] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
 - [ ] `feat: add bootstrap module to fetch prebuilt index on first run`
 - [ ] `chore: exclude generated db files from git`
 
