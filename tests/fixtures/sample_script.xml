@@ -1,0 +1,22 @@
+<script>
+  <scene>
+    <stage_direction>INT. DINER -- NIGHT</stage_direction>
+    <scene_description>Rain hammers the windows. MARA sits alone in a corner booth, coffee going cold.</scene_description>
+    <character>MARA</character>
+    <dialogue>I've been waiting an hour.</dialogue>
+    <character>WAITER</character>
+    <dialogue>Kitchen's backed up.</dialogue>
+    <parenthetical>not looking up</parenthetical>
+    <dialogue>Always is on a Friday.</dialogue>
+    <scene_description>Mara checks her phone. Nothing.</scene_description>
+  </scene>
+  <scene>
+    <stage_direction>EXT. DINER PARKING LOT -- CONTINUOUS</stage_direction>
+    <scene_description>A car idles under a dead streetlight. Its headlights click off.</scene_description>
+  </scene>
+  <scene>
+    <scene_description>No slugline here on purpose -- tests defensive parsing.</scene_description>
+    <character>UNKNOWN VOICE</character>
+    <dialogue>Who's there?</dialogue>
+  </scene>
+</script>

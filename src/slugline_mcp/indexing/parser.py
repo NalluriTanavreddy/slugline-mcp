@@ -5,9 +5,11 @@ sequence of ``<scene>`` elements. Each scene is itself an ordered sequence of:
 
 - ``stage_direction``: the slugline (e.g. "INT. OFFICE -- DAY")
 - ``scene_description``: an action/description line
-- ``character``: the speaker for the dialogue line that follows
+- ``character``: the speaker for the dialogue that follows, "sticky" until the
+  next ``character`` tag (a speech split across multiple ``dialogue`` tags by
+  an interrupting ``parenthetical`` does not repeat the ``character`` tag)
 - ``dialogue``: a line of spoken dialogue
-- ``parenthetical``: a mid-speech beat, attached to the preceding dialogue line
+- ``parenthetical``: a mid-speech beat, attached to the dialogue line it precedes
 
 Scenes are not guaranteed to have a slugline or any dialogue at all
 (action-only scenes are common), so every field below is parsed defensively.
@@ -79,6 +81,7 @@ def parse_script_xml(xml_text: str) -> list[Scene]:
 
         scene = Scene(index=i, slugline=slugline)
         pending_character: str | None = None
+        pending_parenthetical: str | None = None
 
         for child in scene_el:
             text = (child.text or "").strip()
@@ -89,16 +92,20 @@ def parse_script_xml(xml_text: str) -> list[Scene]:
                     scene.body.append(("action", text))
             elif child.tag == "character":
                 pending_character = text
+            elif child.tag == "parenthetical":
+                pending_parenthetical = text
             elif child.tag == "dialogue":
                 scene.body.append(
-                    ("dialogue", DialogueLine(character=pending_character or "UNKNOWN", text=text))
+                    (
+                        "dialogue",
+                        DialogueLine(
+                            character=pending_character or "UNKNOWN",
+                            text=text,
+                            parenthetical=pending_parenthetical,
+                        ),
+                    )
                 )
-                pending_character = None
-            elif child.tag == "parenthetical":
-                for tag, value in reversed(scene.body):
-                    if tag == "dialogue":
-                        value.parenthetical = text
-                        break
+                pending_parenthetical = None
 
         scenes.append(scene)
 

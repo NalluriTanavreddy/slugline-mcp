@@ -35,5 +35,10 @@ index = [
 [project.urls]
 Homepage = "https://github.com/NalluriTanavreddy/slugline-mcp"
 
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/slugline_mcp"]
