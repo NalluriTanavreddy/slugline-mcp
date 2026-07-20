@@ -38,7 +38,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add find_mood_reference_scenes tool`
 - [x] `test: add tests for find_mood_reference_scenes`
 - [x] `feat: register all tools in server`
-- [ ] `refactor: clean up tool response formatting`
+- [x] `refactor: clean up tool response formatting`
 
 ## Phase 4 — Local testing
 - [ ] `docs: add MCP inspector testing instructions`

@@ -22,6 +22,7 @@ def test_returns_expected_fields(populated_retriever, monkeypatch):
         "id",
         "movie_name",
         "imdb_id",
+        "scene_index",
         "slugline",
         "characters",
         "text",

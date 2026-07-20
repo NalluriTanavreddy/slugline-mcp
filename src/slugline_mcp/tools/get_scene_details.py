@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from slugline_mcp.retrieval import get_retriever
+from slugline_mcp.tools._formatting import format_scene
 
 
 def get_scene_details(scene_id: str) -> dict | None:
@@ -20,12 +21,4 @@ def get_scene_details(scene_id: str) -> dict | None:
     scene = retriever.get_scene(scene_id)
     if scene is None:
         return None
-    return {
-        "id": scene.id,
-        "movie_name": scene.movie_name,
-        "imdb_id": scene.imdb_id,
-        "scene_index": scene.scene_index,
-        "slugline": scene.slugline,
-        "characters": scene.characters,
-        "text": scene.text,
-    }
+    return format_scene(scene)

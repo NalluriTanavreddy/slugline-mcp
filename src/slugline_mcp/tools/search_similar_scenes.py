@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from slugline_mcp.retrieval import RetrievedScene, get_retriever
+from slugline_mcp.retrieval import get_retriever
+from slugline_mcp.tools._formatting import format_scene
 
 
 def search_similar_scenes(query: str, n_results: int = 5) -> list[dict]:
@@ -19,16 +20,4 @@ def search_similar_scenes(query: str, n_results: int = 5) -> list[dict]:
     """
     retriever = get_retriever()
     scenes = retriever.search_similar_scenes(query, n_results=n_results)
-    return [_format_scene(scene) for scene in scenes]
-
-
-def _format_scene(scene: RetrievedScene) -> dict:
-    return {
-        "id": scene.id,
-        "movie_name": scene.movie_name,
-        "imdb_id": scene.imdb_id,
-        "slugline": scene.slugline,
-        "characters": scene.characters,
-        "text": scene.text,
-        "similarity_distance": round(scene.distance, 4),
-    }
+    return [format_scene(scene, similarity_distance=round(scene.distance, 4)) for scene in scenes]

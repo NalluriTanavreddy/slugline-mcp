@@ -14,6 +14,7 @@ these results as feedback.
 from __future__ import annotations
 
 from slugline_mcp.retrieval import get_retriever
+from slugline_mcp.tools._formatting import format_scene
 
 
 def find_mood_reference_scenes(target_mood: str, top_k: int = 3) -> list[dict]:
@@ -33,15 +34,4 @@ def find_mood_reference_scenes(target_mood: str, top_k: int = 3) -> list[dict]:
     """
     retriever = get_retriever()
     scenes = retriever.search_scenes_by_mood(target_mood, n_results=top_k)
-    return [
-        {
-            "id": scene.id,
-            "movie_name": scene.movie_name,
-            "imdb_id": scene.imdb_id,
-            "slugline": scene.slugline,
-            "mood": scene.mood,
-            "mood_score": scene.mood_score,
-            "text": scene.text,
-        }
-        for scene in scenes
-    ]
+    return [format_scene(scene, mood=scene.mood, mood_score=round(scene.mood_score, 4)) for scene in scenes]
