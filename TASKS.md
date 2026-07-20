@@ -4,7 +4,7 @@ Work through these in order, one commit per task. Each task = one commit.
 
 ## Phase 0 — Repo setup
 - [x] `chore: initial commit — README, LICENSE`
-- [ ] `chore: add .gitignore`
+- [x] `chore: add .gitignore`
 - [ ] `chore: scaffold pyproject.toml (package: slugline-mcp)`
 - [ ] `chore: create package folder structure`
 
