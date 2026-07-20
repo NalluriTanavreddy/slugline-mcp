@@ -14,7 +14,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `test: add sample script fixtures for scene parser`
 - [x] `feat: add embedding module (sentence-transformers)`
 - [x] `feat: add Chroma client setup`
-- [ ] `feat: add build_index script (loads rohitsaxena/MovieSum)`
+- [x] `feat: add build_index script (loads rohitsaxena/MovieSum)`
 - [ ] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
 - [ ] `feat: add bootstrap module to fetch prebuilt index on first run`
 - [ ] `chore: exclude generated db files from git`
