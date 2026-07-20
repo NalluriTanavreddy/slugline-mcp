@@ -45,7 +45,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `fix: correct tool schema validation errors`
 - [x] `fix: handle empty retrieval results gracefully`
 - [x] `docs: add Claude Desktop config example`
-- [ ] `docs: give README a proper badges/features/roadmap treatment`
+- [x] `docs: give README a proper badges/features/roadmap treatment`
 
 ## Phase 5 — Packaging
 - [ ] `chore: add project.scripts entry point (slugline-mcp)`
