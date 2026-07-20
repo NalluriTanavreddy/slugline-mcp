@@ -33,7 +33,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `test: add tests for get_scene_details`
 - [x] `feat: add list_indexed_movies tool`
 - [x] `test: add tests for list_indexed_movies`
-- [ ] `feat: add get_analysis_style tool for brutal-tone instructions`
+- [x] `feat: add get_analysis_style tool for brutal-tone instructions`
 - [ ] `test: add tests for get_analysis_style`
 - [ ] `feat: add find_mood_reference_scenes tool`
 - [ ] `test: add tests for find_mood_reference_scenes`
