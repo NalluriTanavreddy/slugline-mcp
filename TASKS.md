@@ -26,7 +26,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add vector retrieval logic`
 
 ## Phase 3 — Tools
-- [ ] `feat: add search_similar_scenes tool`
+- [x] `feat: add search_similar_scenes tool`
 - [ ] `test: add tests for search_similar_scenes`
 - [ ] `feat: add get_scene_details tool`
 - [ ] `test: add tests for get_scene_details`
