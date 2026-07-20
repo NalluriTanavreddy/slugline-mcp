@@ -5,11 +5,18 @@
 ### Brutal, evidence-based screenplay analysis — grounded in real produced scripts.
 **Mood, next-action suggestions, and "X meets Y" comparisons, backed by retrieval over ~2,200 real screenplays. One MCP server. Zero vibes-based feedback.**
 
+**Under the hood: a full Retrieval-Augmented Generation (RAG) pipeline — chunking, vector
+embeddings, semantic search, and local zero-shot classification — exposed entirely as
+Model Context Protocol (MCP) tools, with zero LLM calls from the server itself.**
+
 slugline-mcp doesn't write or judge your scene itself — it retrieves real produced scenes
 similar to yours (or matching a mood you're chasing) so *your own* connected Claude can
-ground its feedback in evidence instead of guessing.
+ground its feedback in evidence instead of guessing. It's the *retrieval* half of RAG,
+full stop: parse, embed, index, and semantically search real screenplays, then hand that
+grounded evidence to Claude over MCP.
 
 [![Status](https://img.shields.io/badge/status-pre--release-orange)](TASKS.md)
+[![Architecture](https://img.shields.io/badge/architecture-RAG_pipeline-8a2be2)](#-how-the-rag-pipeline-works)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-server-black)](https://modelcontextprotocol.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -45,10 +52,49 @@ into scenes, embeds them, and exposes semantic search over that index as MCP too
 LLM doing the actual writing and judgment is *your own* Claude, connected locally — this
 server never calls out to an LLM itself, it just supplies the evidence.
 
+Two engineering ideas this project is built around:
+
+- **RAG, done properly**: real chunking (screenplay scenes, not arbitrary token
+  windows), a purpose-fit embedding model, a persistent vector store, and metadata
+  filtering (mood tags computed once at index time) layered on top of semantic
+  similarity — not just "stuff everything into a prompt."
+- **MCP, done properly**: five tools with schemas an LLM can actually reason about
+  (`Annotated[..., Field(description=...)]` throughout `tools/`), including a dedicated
+  `get_analysis_style` tool whose whole job is steering *how* the calling LLM uses the
+  other four — prompt engineering expressed as a callable tool, not a static system prompt.
+
 Reference data comes from
 [rohitsaxena/MovieSum](https://huggingface.co/datasets/rohitsaxena/MovieSum), a public
 Hugging Face dataset of ~2,200 movie screenplays, pre-structured into scenes with
 dialogue and stage directions.
+
+---
+
+## 🧠 How the RAG Pipeline Works
+
+**Index time** (once, offline, in `indexing/build_index.py`):
+
+1. **Parse** — MovieSum's screenplay XML (or a user's raw pasted script, via a separate
+   plain-text splitter) is split into scenes, not arbitrary chunks — a scene is the
+   natural retrieval unit for screenplay feedback.
+2. **Embed** — each scene's flattened text is encoded with
+   `sentence-transformers/all-MiniLM-L6-v2` into a 384-dim vector.
+3. **Classify** — each scene is also run once through a local zero-shot classifier
+   (`facebook/bart-large-mnli`) against a fixed mood taxonomy, so mood becomes a stored
+   metadata field instead of something re-inferred on every query.
+4. **Store** — vectors + text + metadata land in a persistent
+   [Chroma](https://www.trychroma.com/) collection.
+
+**Query time** (every MCP tool call, in `retrieval.py`):
+
+1. The incoming query (a scene, or a target mood) is embedded with the same model.
+2. Chroma runs approximate nearest-neighbor search over the stored vectors — optionally
+   pre-filtered by metadata (e.g. `mood == "paranoid"`) before ranking by similarity.
+3. Results are formatted into a canonical scene shape and returned as MCP tool output —
+   raw evidence, not a generated answer.
+
+Retrieval and generation are fully decoupled here: this server only ever does the
+retrieval half, and the MCP tool boundary is exactly where that handoff happens.
 
 ---
 
@@ -100,9 +146,10 @@ dialogue and stage directions.
 
 | Layer | Choice |
 |---|---|
+| Architecture pattern | RAG (retrieval-augmented generation), exposed entirely as MCP tools |
 | Language | Python 3.10+ |
 | MCP framework | Official `mcp` Python SDK (FastMCP) |
-| Embeddings | sentence-transformers (`all-MiniLM-L6-v2`) |
+| Embeddings / vector search | sentence-transformers (`all-MiniLM-L6-v2`) + Chroma ANN search |
 | Vector database | [Chroma](https://www.trychroma.com/) (persistent, local) |
 | Mood classification | Local zero-shot `transformers` pipeline (`facebook/bart-large-mnli`), index-time only |
 | Reference dataset | [rohitsaxena/MovieSum](https://huggingface.co/datasets/rohitsaxena/MovieSum) (~2,200 screenplays) |
