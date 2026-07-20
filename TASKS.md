@@ -23,7 +23,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: scaffold MCP server`
 - [x] `feat: add __main__ entry point`
 - [x] `feat: wire up config/env var loading`
-- [ ] `feat: add vector retrieval logic`
+- [x] `feat: add vector retrieval logic`
 
 ## Phase 3 — Tools
 - [ ] `feat: add search_similar_scenes tool`
