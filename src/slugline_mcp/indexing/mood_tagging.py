@@ -14,6 +14,8 @@ from functools import lru_cache
 
 from transformers import pipeline
 
+from slugline_mcp.indexing.embeddings import DEFAULT_MODEL_NAME, embed_texts
+
 MOOD_MODEL_NAME = "facebook/bart-large-mnli"
 
 CANDIDATE_MOODS = [
@@ -41,3 +43,16 @@ def tag_mood(text: str) -> tuple[str, float]:
     classifier = _get_classifier()
     result = classifier(text, candidate_labels=CANDIDATE_MOODS)
     return result["labels"][0], float(result["scores"][0])
+
+
+@lru_cache(maxsize=4)
+def get_candidate_mood_embeddings(model_name: str = DEFAULT_MODEL_NAME) -> dict[str, tuple[float, ...]]:
+    """Embed each candidate mood label once, for matching a free-text query mood against them.
+
+    Cached per embedding model. Used by ``retrieval.py`` to decide whether a
+    user's free-text target mood is close enough to a precoded tag to use
+    the precise tag-filtered search path, or should fall back to raw
+    semantic search.
+    """
+    vectors = embed_texts(CANDIDATE_MOODS, model_name=model_name)
+    return {label: tuple(vector) for label, vector in zip(CANDIDATE_MOODS, vectors)}

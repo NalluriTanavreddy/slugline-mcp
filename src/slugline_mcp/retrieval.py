@@ -18,8 +18,18 @@ from slugline_mcp.config import Config, load_config
 from slugline_mcp.indexing.bootstrap import ensure_index
 from slugline_mcp.indexing.chroma_client import get_chroma_client, get_scenes_collection
 from slugline_mcp.indexing.embeddings import embed_query
+from slugline_mcp.indexing.mood_tagging import get_candidate_mood_embeddings
 
 logger = logging.getLogger(__name__)
+
+# Cosine similarity a free-text target mood must have to its closest precoded
+# tag to use the precise tag-filtered search path. Calibrated empirically
+# against sentence-transformers/all-MiniLM-L6-v2: clear conceptual matches
+# ("funny" -> comedic, "euphoric victory" -> triumphant, "suffocating dread"
+# -> dread) score 0.47-0.76; unrelated text ("quarterly earnings report",
+# "recipe for chocolate cake") tops out around 0.25. 0.45 sits cleanly above
+# that noise floor while still admitting loose-but-real synonyms.
+MOOD_TAG_MATCH_THRESHOLD = 0.45
 
 
 @dataclass
@@ -34,6 +44,32 @@ class RetrievedScene:
     distance: float
     mood: str = ""
     mood_score: float = 0.0
+
+
+@dataclass
+class MoodSearchResult:
+    scenes: list[RetrievedScene]
+    method: str  # "tag_matched" | "semantic_fallback"
+    matched_tag: str | None
+    tag_similarity: float | None
+
+
+def _cosine_similarity(a, b) -> float:
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = sum(x * x for x in a) ** 0.5
+    norm_b = sum(y * y for y in b) ** 0.5
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
+
+
+def _closest_mood_tag(query_embedding, model_name: str) -> tuple[str, float]:
+    """Return the (tag, cosine_similarity) of the precoded mood tag closest to ``query_embedding``."""
+    label_embeddings = get_candidate_mood_embeddings(model_name=model_name)
+    return max(
+        ((tag, _cosine_similarity(query_embedding, tag_embedding)) for tag, tag_embedding in label_embeddings.items()),
+        key=lambda pair: pair[1],
+    )
 
 
 def _metadata_fields(meta: dict) -> dict:
@@ -96,18 +132,44 @@ class Retriever:
         results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
         return _query_results_to_scenes(results)
 
-    def search_scenes_by_mood(self, target_mood: str, n_results: int = 3) -> list[RetrievedScene]:
-        """Find scenes tagged with ``target_mood``, ranked by similarity to that mood label."""
+    def search_scenes_by_mood(self, target_mood: str, n_results: int = 3) -> MoodSearchResult:
+        """Find scenes matching a target mood, via a hybrid tag/semantic strategy.
+
+        If ``target_mood`` closely matches one of the precoded mood tags
+        (see ``MOOD_TAG_MATCH_THRESHOLD``), search is filtered to scenes
+        tagged with that label -- precise, but only covers the fixed mood
+        taxonomy. Otherwise, falls back to a raw nearest-neighbor search over
+        every scene's embedding, ignoring mood tags entirely, so free-text
+        moods outside the taxonomy still return something reasonable.
+        """
         collection = self._get_collection()
         if collection is None:
-            return []
+            return MoodSearchResult(scenes=[], method="unavailable", matched_tag=None, tag_similarity=None)
+
         query_embedding = embed_query(target_mood, model_name=self._config.embedding_model)
-        results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=n_results,
-            where={"mood": target_mood},
+        matched_tag, similarity = _closest_mood_tag(query_embedding, self._config.embedding_model)
+        tag_similarity = round(similarity, 4)
+
+        if similarity >= MOOD_TAG_MATCH_THRESHOLD:
+            results = collection.query(
+                query_embeddings=[query_embedding],
+                n_results=n_results,
+                where={"mood": matched_tag},
+            )
+            return MoodSearchResult(
+                scenes=_query_results_to_scenes(results),
+                method="tag_matched",
+                matched_tag=matched_tag,
+                tag_similarity=tag_similarity,
+            )
+
+        results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
+        return MoodSearchResult(
+            scenes=_query_results_to_scenes(results),
+            method="semantic_fallback",
+            matched_tag=matched_tag,
+            tag_similarity=tag_similarity,
         )
-        return _query_results_to_scenes(results)
 
     def get_scene(self, scene_id: str) -> RetrievedScene | None:
         collection = self._get_collection()

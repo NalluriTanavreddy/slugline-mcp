@@ -109,7 +109,9 @@ retrieval half, and the MCP tool boundary is exactly where that handoff happens.
 - `list_indexed_movies` — enumerate every movie currently in the reference index
 - `find_mood_reference_scenes` — find scenes that strongly hit a *target* mood (e.g.
   "paranoid"), for when you want to rewrite toward a mood your scene doesn't have yet —
-  filtered by a mood tag computed once at indexing time, not guessed at query time
+  a hybrid search: free-text moods close to a precoded tag get precise tag-filtered
+  results, anything else falls back to raw semantic search, with the method used
+  reported back for transparency
 
 </details>
 
