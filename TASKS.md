@@ -12,7 +12,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add MovieSum XML parser for splitting scripts into scenes`
 - [x] `feat: add plain-text scene splitter for user-submitted scripts`
 - [x] `test: add sample script fixtures for scene parser`
-- [ ] `feat: add embedding module (sentence-transformers)`
+- [x] `feat: add embedding module (sentence-transformers)`
 - [ ] `feat: add Chroma client setup`
 - [ ] `feat: add build_index script (loads rohitsaxena/MovieSum)`
 - [ ] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
