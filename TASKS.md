@@ -37,7 +37,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [ ] `test: add tests for get_analysis_style`
 - [x] `feat: add find_mood_reference_scenes tool`
 - [x] `test: add tests for find_mood_reference_scenes`
-- [ ] `feat: register all tools in server`
+- [x] `feat: register all tools in server`
 - [ ] `refactor: clean up tool response formatting`
 
 ## Phase 4 — Local testing
