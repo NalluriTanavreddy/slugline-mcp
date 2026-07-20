@@ -29,6 +29,13 @@ htmlcov/
 .env.*
 !.env.example
 
+# Generated Chroma index / dataset cache (default persist dir is ~/.slugline-mcp,
+# but ignore common in-repo locations too in case of local overrides)
+.slugline-mcp/
+chroma_db/
+*.sqlite3
+/data/
+
 # Editors
 .vscode/
 .idea/

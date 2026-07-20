@@ -17,7 +17,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add build_index script (loads rohitsaxena/MovieSum)`
 - [x] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
 - [x] `feat: add bootstrap module to fetch prebuilt index on first run`
-- [ ] `chore: exclude generated db files from git`
+- [x] `chore: exclude generated db files from git`
 
 ## Phase 2 — MCP server core
 - [ ] `feat: scaffold MCP server`
