@@ -20,7 +20,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `chore: exclude generated db files from git`
 
 ## Phase 2 — MCP server core
-- [ ] `feat: scaffold MCP server`
+- [x] `feat: scaffold MCP server`
 - [ ] `feat: add __main__ entry point`
 - [ ] `feat: wire up config/env var loading`
 - [ ] `feat: add vector retrieval logic`
