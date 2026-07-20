@@ -7,8 +7,13 @@ Run it with:
     uv run --extra index python -m slugline_mcp.indexing.build_index
 
 See ``docs/dataset.md`` for details on the dataset itself. Requires the
-``index`` extra (``datasets``), which the published package does not depend
-on at runtime.
+``index`` extra (``datasets``, ``transformers``), which the published
+package does not depend on at runtime.
+
+Each scene is also run through a local zero-shot mood classifier (see
+``mood_tagging.py``) so ``find_mood_reference_scenes`` can filter by mood
+later. This is the slowest part of indexing -- budget for it when indexing
+the full dataset.
 """
 
 from __future__ import annotations
@@ -20,6 +25,7 @@ from datasets import concatenate_datasets, load_dataset
 
 from slugline_mcp.indexing.chroma_client import DEFAULT_PERSIST_DIR, get_chroma_client, get_scenes_collection
 from slugline_mcp.indexing.embeddings import embed_texts
+from slugline_mcp.indexing.mood_tagging import tag_mood
 from slugline_mcp.indexing.parser import parse_script_xml
 
 logger = logging.getLogger(__name__)
@@ -46,6 +52,7 @@ def _iter_scene_records(limit: int | None = None):
             text = scene.to_text()
             if len(text) < MIN_SCENE_CHARS:
                 continue
+            mood, mood_score = tag_mood(text)
             yield (
                 f"{movie['imdb_id']}_{scene.index}",
                 text,
@@ -55,6 +62,8 @@ def _iter_scene_records(limit: int | None = None):
                     "scene_index": scene.index,
                     "slugline": scene.slugline or "",
                     "characters": ", ".join(scene.characters),
+                    "mood": mood,
+                    "mood_score": mood_score,
                 },
             )
 

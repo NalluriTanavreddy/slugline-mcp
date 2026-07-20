@@ -4026,6 +4026,7 @@ dependencies = [
 [package.optional-dependencies]
 index = [
     { name = "datasets" },
+    { name = "transformers" },
 ]
 
 [package.dev-dependencies]
@@ -4040,6 +4041,7 @@ requires-dist = [
     { name = "huggingface-hub", specifier = ">=0.25.0" },
     { name = "mcp", specifier = ">=1.2.0" },
     { name = "sentence-transformers", specifier = ">=3.0.0" },
+    { name = "transformers", marker = "extra == 'index'", specifier = ">=4.40.0" },
 ]
 provides-extras = ["index"]
 

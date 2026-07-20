@@ -15,6 +15,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `feat: add embedding module (sentence-transformers)`
 - [x] `feat: add Chroma client setup`
 - [x] `feat: add build_index script (loads rohitsaxena/MovieSum)`
+- [x] `feat: add one-time mood tagging step during indexing (local zero-shot classifier, stores mood metadata per scene)`
 - [x] `docs: add instructions for downloading reference dataset (rohitsaxena/MovieSum)`
 - [x] `feat: add bootstrap module to fetch prebuilt index on first run`
 - [x] `chore: exclude generated db files from git`
@@ -34,6 +35,8 @@ Work through these in order, one commit per task. Each task = one commit.
 - [ ] `test: add tests for list_indexed_movies`
 - [ ] `feat: add get_analysis_style tool for brutal-tone instructions`
 - [ ] `test: add tests for get_analysis_style`
+- [ ] `feat: add find_mood_reference_scenes tool`
+- [ ] `test: add tests for find_mood_reference_scenes`
 - [ ] `feat: register all tools in server`
 - [ ] `refactor: clean up tool response formatting`
 
