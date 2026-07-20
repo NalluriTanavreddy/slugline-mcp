@@ -32,6 +32,8 @@ class RetrievedScene:
     slugline: str
     characters: str
     distance: float
+    mood: str = ""
+    mood_score: float = 0.0
 
 
 def _metadata_fields(meta: dict) -> dict:
@@ -41,7 +43,18 @@ def _metadata_fields(meta: dict) -> dict:
         "scene_index": meta.get("scene_index", -1),
         "slugline": meta.get("slugline", ""),
         "characters": meta.get("characters", ""),
+        "mood": meta.get("mood", ""),
+        "mood_score": meta.get("mood_score", 0.0),
     }
+
+
+def _query_results_to_scenes(results) -> list[RetrievedScene]:
+    scenes: list[RetrievedScene] = []
+    for id_, doc, meta, dist in zip(
+        results["ids"][0], results["documents"][0], results["metadatas"][0], results["distances"][0]
+    ):
+        scenes.append(RetrievedScene(id=id_, text=doc, distance=dist, **_metadata_fields(meta)))
+    return scenes
 
 
 class Retriever:
@@ -81,13 +94,20 @@ class Retriever:
             return []
         query_embedding = embed_query(query_text, model_name=self._config.embedding_model)
         results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
+        return _query_results_to_scenes(results)
 
-        scenes: list[RetrievedScene] = []
-        for id_, doc, meta, dist in zip(
-            results["ids"][0], results["documents"][0], results["metadatas"][0], results["distances"][0]
-        ):
-            scenes.append(RetrievedScene(id=id_, text=doc, distance=dist, **_metadata_fields(meta)))
-        return scenes
+    def search_scenes_by_mood(self, target_mood: str, n_results: int = 3) -> list[RetrievedScene]:
+        """Find scenes tagged with ``target_mood``, ranked by similarity to that mood label."""
+        collection = self._get_collection()
+        if collection is None:
+            return []
+        query_embedding = embed_query(target_mood, model_name=self._config.embedding_model)
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=n_results,
+            where={"mood": target_mood},
+        )
+        return _query_results_to_scenes(results)
 
     def get_scene(self, scene_id: str) -> RetrievedScene | None:
         collection = self._get_collection()
