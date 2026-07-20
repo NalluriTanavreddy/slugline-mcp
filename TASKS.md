@@ -6,7 +6,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `chore: initial commit — README, LICENSE`
 - [x] `chore: add .gitignore`
 - [x] `chore: scaffold pyproject.toml (package: slugline-mcp)`
-- [ ] `chore: create package folder structure`
+- [x] `chore: create package folder structure`
 
 ## Phase 1 — Indexing pipeline
 - [ ] `feat: add MovieSum XML parser for splitting scripts into scenes`
