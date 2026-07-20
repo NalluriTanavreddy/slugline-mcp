@@ -21,7 +21,7 @@ Work through these in order, one commit per task. Each task = one commit.
 
 ## Phase 2 — MCP server core
 - [x] `feat: scaffold MCP server`
-- [ ] `feat: add __main__ entry point`
+- [x] `feat: add __main__ entry point`
 - [ ] `feat: wire up config/env var loading`
 - [ ] `feat: add vector retrieval logic`
 
