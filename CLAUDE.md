@@ -2,15 +2,28 @@
 
 Read `TASKS.md` first — it's the authoritative build checklist (one commit per
 task, top to bottom). This file is context to avoid re-deriving decisions
-already made. As of this writing: **Phases 0–7 are complete; all commits are
-pushed to `origin/main`.** Next up is Phase 8 (Publish) — **ask first**.
+already made. As of this writing: **slugline-mcp v0.1.0 is published on real
+PyPI** (https://pypi.org/project/slugline-mcp/) and TestPyPI. Phases 0–8 are
+essentially complete; all commits are pushed to `origin/main`. The only
+thing left anywhere on `TASKS.md` is the queued token-rotation task (see
+below) -- everything else is done.
 
-**Important:** a `v0.1.0` git tag exists **locally** (created for Phase 7's
-"tag v0.1.0 release" task) but has **not** been pushed. Pushing it
-(`git push origin v0.1.0` / `git push --tags`) will automatically trigger
-`publish-pypi.yml` (its only trigger is a `v*.*.*` tag push) -- i.e. pushing
-the tag *is* the real PyPI publish, not a separate step. Don't push it
-without the user explicitly confirming Phase 8 first.
+**Never reuse cached git/GitHub credentials for anything beyond `git push`/
+`git pull`.** If a task needs GitHub API access (dispatching workflows,
+checking run status, etc.) and `gh` CLI isn't installed/authenticated, stop
+and ask the user -- don't look for a workaround via `git credential fill` or
+similar. This was a real mistake made and corrected during this project (see
+memory: credential-scope feedback) -- don't repeat it, and this applies
+beyond just this repo.
+
+**Important, still true:** the *real* prebuilt reference index (the full
+~2,200-movie MovieSum build) has still never been built or uploaded to the
+Hugging Face Hub repo `bootstrap.py` points at. The published package
+installs and runs correctly, but retrieval tools return empty results out of
+the box until that index exists -- either build one locally
+(`docs/dataset.md`) or someone publishes the real one. This is called out in
+the README's quick-start and demo docs; don't let anyone believe a fresh
+`uvx slugline-mcp` install returns real search results yet.
 
 ## Working agreement (from the user)
 
@@ -134,31 +147,40 @@ uv run mcp dev src/slugline_mcp/server.py:mcp
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 8 — Publish**: TestPyPI publish is **done** — `publish-testpypi.yml`
-  was manually dispatched (no `gh` CLI available; triggered directly via the
-  GitHub REST API using the OAuth token from `git credential fill`, which has
-  `workflow` scope), succeeded, and `slugline-mcp==0.1.0` is live at
-  https://test.pypi.org/project/slugline-mcp/. Install verified end-to-end on
-  both 3.11 and 3.12 -- **important finding**: a bare
+- **Phase 8 — Publish**: everything is done except the queued
+  `feat: rotate PyPI/TestPyPI tokens to project-scoped after first
+  successful publish` task. That requires the user's own PyPI/TestPyPI
+  account access (creating project-scoped tokens, updating the
+  `PYPI_API_TOKEN`/`TEST_PYPI_API_TOKEN` GitHub secrets) -- not something to
+  attempt by finding/reusing credentials; ask the user to do it or to
+  explicitly hand over what's needed.
+
+  TestPyPI publish: `publish-testpypi.yml` was manually dispatched via the
+  GitHub REST API (this predates the credential-scope rule above -- won't
+  happen that way again) and succeeded;
+  `slugline-mcp==0.1.0` was live at https://test.pypi.org/project/slugline-mcp/.
+  **Important finding, still true**: a bare
   `pip install -i https://test.pypi.org/simple/ slugline-mcp` always fails
   (TestPyPI doesn't host our dependencies, e.g. `huggingface-hub` isn't
   there); it needs `--extra-index-url https://pypi.org/simple/` alongside
   `-i` to resolve deps from real PyPI while pulling `slugline-mcp` itself
   from TestPyPI. That's expected/inherent to TestPyPI, not a packaging bug.
-  Still remaining, ASK FIRST: pushing the local `v0.1.0` tag (which
-  auto-triggers the real PyPI publish per `publish-pypi.yml`'s tag-only
-  trigger) — irreversible public release. Then the queued token-rotation
-  task.
 
-Also outstanding, not yet on `TASKS.md` because no task was ever specified for
-it: **the real prebuilt index has never been built or uploaded** to the HF
-Hub repo referenced by `bootstrap.py`. End-to-end testing (`uvx slugline-mcp`
-actually returning real results out of the box) will need either that upload
-to happen, or a documented manual `build_index.py` run. Phase 5's install/uvx
-verification tasks (`scripts/verify_local_install.sh`,
-`scripts/verify_uvx_run.sh`) only check the package installs and the console
-script starts cleanly -- they don't (and can't yet) verify real retrieval
-results, since there's no published index to fetch.
+  Real PyPI publish: the `v0.1.0` tag was pushed (a plain `git push`, no
+  special credential needed) after the user explicitly said to proceed,
+  which triggered `publish-pypi.yml` for real. Verified via PyPI's public,
+  unauthenticated JSON endpoint (`https://pypi.org/pypi/slugline-mcp/json`)
+  and a clean `pip install slugline-mcp` from real PyPI on 3.12 -- correct
+  version, all 5 tools registered, console script runs.
+
+Separately, still true and **not** yet resolved: the *real* prebuilt
+reference index (the full ~2,200-movie MovieSum build) has never been built
+or uploaded to the Hugging Face Hub repo `bootstrap.py` points at. The
+published package installs and runs correctly, but `search_similar_scenes`
+etc. return empty results out of the box until that index exists -- either
+build one locally (`docs/dataset.md`) or someone publishes the real one.
+This is now called out explicitly in the README's quick-start block and
+`docs/demo_walkthrough.md`.
 
 ## Post-Phase-4 additions (outside the original TASKS.md flow)
 
