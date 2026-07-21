@@ -15,7 +15,7 @@ ground its feedback in evidence instead of guessing. It's the *retrieval* half o
 full stop: parse, embed, index, and semantically search real screenplays, then hand that
 grounded evidence to Claude over MCP.
 
-[![Status](https://img.shields.io/badge/status-pre--release-orange)](TASKS.md)
+[![PyPI](https://img.shields.io/pypi/v/slugline-mcp?logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/slugline-mcp/)
 [![Architecture](https://img.shields.io/badge/architecture-RAG_pipeline-8a2be2)](#-how-the-rag-pipeline-works)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-server-black)](https://modelcontextprotocol.io)
@@ -28,12 +28,17 @@ grounded evidence to Claude over MCP.
 
 ---
 
-> **Try it once it's runnable end-to-end (see the roadmap below):**
+> **Try it:**
 >
-> - 📦 **Clone it** — `git clone https://github.com/NalluriTanavreddy/slugline-mcp.git && cd slugline-mcp && uv sync`
+> - 📦 **Install it** — `uvx slugline-mcp` (or `uv pip install slugline-mcp`), published on
+>   [PyPI](https://pypi.org/project/slugline-mcp/)
 > - 🔌 **Add it to Claude Desktop** — see [`docs/claude_desktop.md`](docs/claude_desktop.md) for the config
 > - 🎬 **Ask about your scene** — "Find me real scenes similar to this one: [paste a scene]" and Claude
 >   answers grounded in actual retrieved screenplay text, not general knowledge
+>
+> Note: retrieval needs a populated reference index, and a prebuilt one isn't published yet —
+> see [`docs/dataset.md`](docs/dataset.md) to build one locally. Until then, tools return empty
+> results rather than crashing (see [If retrieval comes back empty](#if-retrieval-comes-back-empty)).
 
 ---
 
@@ -173,9 +178,13 @@ retrieval half, and the MCP tool boundary is exactly where that handoff happens.
 
 ### Install
 
-**From PyPI:** not yet published — see the roadmap below (Phase 8).
+**From PyPI:**
 
-**From source (works today):**
+```bash
+uv pip install slugline-mcp
+```
+
+**From source:**
 
 ```bash
 git clone https://github.com/NalluriTanavreddy/slugline-mcp.git
@@ -191,8 +200,8 @@ uv run python -m slugline_mcp
 
 ### Add it to Claude Desktop
 
-See [`docs/claude_desktop.md`](docs/claude_desktop.md) for the full config example (dev
-mode today; a simpler `uvx slugline-mcp` config once published).
+See [`docs/claude_desktop.md`](docs/claude_desktop.md) for the full config example — a
+`uvx slugline-mcp` config now that it's published, or a local-checkout config for dev mode.
 
 ### Build or fetch a reference index
 

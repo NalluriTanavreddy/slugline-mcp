@@ -6,6 +6,23 @@ file:
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
+## Recommended: from PyPI
+
+slugline-mcp is published (https://pypi.org/project/slugline-mcp/), so the
+simplest config uses `uvx`, which downloads and runs the published package
+on demand -- no local clone or manual dependency install needed:
+
+```json
+{
+  "mcpServers": {
+    "slugline-mcp": {
+      "command": "uvx",
+      "args": ["slugline-mcp"]
+    }
+  }
+}
+```
+
 ## While developing (from a local checkout)
 
 ```json
@@ -21,26 +38,6 @@ file:
 
 Replace `/absolute/path/to/slugline-mcp` with the path to your local
 checkout of this repo.
-
-## Once published to PyPI
-
-Once slugline-mcp has a `slugline-mcp` console entry point and is published
-(see the packaging and publish phases in `TASKS.md`), the config simplifies
-to:
-
-```json
-{
-  "mcpServers": {
-    "slugline-mcp": {
-      "command": "uvx",
-      "args": ["slugline-mcp"]
-    }
-  }
-}
-```
-
-`uvx` downloads and runs the published package on demand -- no local clone
-or manual dependency install needed.
 
 ## After adding the config
 
