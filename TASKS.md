@@ -58,7 +58,7 @@ Work through these in order, one commit per task. Each task = one commit.
 
 ## Phase 6 — CI/CD
 - [x] `ci: add GitHub Actions build + test workflow`
-- [ ] `ci: add GitHub Actions PyPI publish workflow`
+- [x] `ci: add GitHub Actions PyPI publish workflow`
 - [ ] `ci: add TestPyPI publish step for pre-release validation`
 
 ## Phase 7 — Docs & release

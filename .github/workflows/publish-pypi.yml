@@ -1,0 +1,36 @@
+name: Publish to PyPI
+
+# Deliberately narrow: only a version tag push triggers this. This is the
+# real public release mechanism -- it must never fire on an ordinary commit
+# or PR, only on an explicit `git tag vX.Y.Z && git push --tags`.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.3.2
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build distribution
+        run: uv run python -m build
+
+      - name: Publish to PyPI
+        run: uv run twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
