@@ -134,11 +134,21 @@ uv run mcp dev src/slugline_mcp/server.py:mcp
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 8 — Publish**: ASK FIRST. Build artifacts, TestPyPI (manually via
-  `workflow_dispatch` on `publish-testpypi.yml`, or `gh workflow run
-  publish-testpypi.yml`), then PyPI (by pushing the already-created local
-  `v0.1.0` tag) — irreversible public release. Then the queued
-  token-rotation task.
+- **Phase 8 — Publish**: TestPyPI publish is **done** — `publish-testpypi.yml`
+  was manually dispatched (no `gh` CLI available; triggered directly via the
+  GitHub REST API using the OAuth token from `git credential fill`, which has
+  `workflow` scope), succeeded, and `slugline-mcp==0.1.0` is live at
+  https://test.pypi.org/project/slugline-mcp/. Install verified end-to-end on
+  both 3.11 and 3.12 -- **important finding**: a bare
+  `pip install -i https://test.pypi.org/simple/ slugline-mcp` always fails
+  (TestPyPI doesn't host our dependencies, e.g. `huggingface-hub` isn't
+  there); it needs `--extra-index-url https://pypi.org/simple/` alongside
+  `-i` to resolve deps from real PyPI while pulling `slugline-mcp` itself
+  from TestPyPI. That's expected/inherent to TestPyPI, not a packaging bug.
+  Still remaining, ASK FIRST: pushing the local `v0.1.0` tag (which
+  auto-triggers the real PyPI publish per `publish-pypi.yml`'s tag-only
+  trigger) — irreversible public release. Then the queued token-rotation
+  task.
 
 Also outstanding, not yet on `TASKS.md` because no task was ever specified for
 it: **the real prebuilt index has never been built or uploaded** to the HF
