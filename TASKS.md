@@ -67,7 +67,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `docs: add CONTRIBUTING.md`
 - [x] `docs: add demo walkthrough`
 - [x] `chore: bump version to 0.1.0`
-- [ ] `chore: tag v0.1.0 release`
+- [x] `chore: tag v0.1.0 release`
 
 ## Phase 8 — Publish
 - [ ] `chore: build distribution artifacts`
