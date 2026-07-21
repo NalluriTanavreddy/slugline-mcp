@@ -62,7 +62,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `ci: add TestPyPI publish step for pre-release validation`
 
 ## Phase 7 — Docs & release
-- [ ] `docs: write full README usage guide`
+- [x] `docs: write full README usage guide`
 - [ ] `docs: add CONTRIBUTING.md`
 - [ ] `docs: add demo walkthrough`
 - [ ] `chore: bump version to 0.1.0`

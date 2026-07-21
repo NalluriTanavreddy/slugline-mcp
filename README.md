@@ -211,6 +211,60 @@ Inspector.
 
 ---
 
+## 📖 Usage
+
+Once slugline-mcp is connected (see [Add it to Claude Desktop](#add-it-to-claude-desktop)
+above), just talk to Claude normally — paste a scene, describe what you're stuck on, or ask
+for a comparison. Claude decides which tools to call; you never call them directly.
+
+### Typical workflow
+
+1. **Paste a scene and ask for feedback.** Claude calls `get_analysis_style` first (it's
+   designed to steer the whole interaction), then `search_similar_scenes` with your scene's
+   text to pull real comparable scenes from the reference index.
+2. **Claude cites specific movies and scenes**, not vague genre talk — if it says "this reads
+   like a beat from *8MM*," that's because `search_similar_scenes` actually returned that scene.
+3. **Ask to see the full match.** "Show me that whole scene" prompts Claude to call
+   `get_scene_details` with the id from the earlier search result.
+4. **Ask for a mood rewrite.** "Make this scene feel more paranoid" prompts
+   `find_mood_reference_scenes("paranoid")` — Claude gets back real scenes that strongly hit
+   that mood, plus whether the match was precise (`tag_matched`) or a broader semantic guess
+   (`semantic_fallback`).
+5. **Ask what's in the reference set.** "What movies do you have indexed?" calls
+   `list_indexed_movies`.
+
+### Example prompts
+
+| You ask Claude... | Tool(s) it calls |
+|---|---|
+| "Here's my opening scene — what does this actually read like?" | `get_analysis_style`, `search_similar_scenes` |
+| "Show me the full text of that Iron Lady scene you mentioned" | `get_scene_details` |
+| "I want this argument to feel more like dread building, not just tense" | `find_mood_reference_scenes` |
+| "What films are actually in your reference database?" | `list_indexed_movies` |
+| "Give me an 'X meets Y' comparison for this whole script" | `get_analysis_style`, `search_similar_scenes` (called repeatedly across scenes) |
+
+### Tools reference
+
+| Tool | Purpose | Key parameters |
+|---|---|---|
+| `get_analysis_style` | Tone/structure instructions for the calling LLM | none |
+| `search_similar_scenes` | Semantic search for structurally/tonally similar produced scenes | `query` (scene text), `n_results` |
+| `get_scene_details` | Full text + metadata for one scene by id | `scene_id` |
+| `list_indexed_movies` | Every movie currently in the index | none |
+| `find_mood_reference_scenes` | Scenes that strongly hit a target mood, hybrid tag/semantic search | `target_mood`, `top_k` |
+
+### If retrieval comes back empty
+
+Every tool degrades gracefully instead of erroring if no reference index is available yet
+(see `retrieval.py`) — you'll get empty results rather than a crash. If that happens:
+
+- Confirm a Chroma index exists at `~/.slugline-mcp/chroma` (or wherever
+  `SLUGLINE_MCP_PERSIST_DIR` points).
+- If not, either wait for `bootstrap.py` to fetch the prebuilt index, or build one yourself
+  (see [`docs/dataset.md`](docs/dataset.md)).
+
+---
+
 ## 🗂️ Project Structure
 
 ```
@@ -250,8 +304,8 @@ docs/     # dataset, MCP Inspector testing, Claude Desktop config
 - [x] **Phase 3** — Tools: all five tools implemented, registered, and tested
 - [x] **Phase 4** — Local testing: MCP Inspector docs, schema fixes, graceful empty
       results, Claude Desktop config, this README
-- [ ] **Phase 5** — Packaging: console entry point, versioning, `uvx` support
-- [ ] **Phase 6** — CI/CD: GitHub Actions build/test + PyPI publish workflows
+- [x] **Phase 5** — Packaging: console entry point, versioning, `uvx` support
+- [x] **Phase 6** — CI/CD: GitHub Actions build/test + PyPI publish workflows
 - [ ] **Phase 7** — Docs & release: full usage guide, CONTRIBUTING, demo walkthrough, v0.1.0
 - [ ] **Phase 8** — Publish: TestPyPI, then PyPI
 
