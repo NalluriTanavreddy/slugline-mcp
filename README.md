@@ -39,8 +39,10 @@ grounded evidence to Claude over MCP.
 
 ## 🎥 Demo
 
-*(Coming soon — a walkthrough recording is planned as part of the docs & release phase.
-See the roadmap below.)*
+A screen recording is still coming (see the roadmap below), but
+[`docs/demo_walkthrough.md`](docs/demo_walkthrough.md) has a full text walkthrough with real
+tool output — including both the precise tag-matched and semantic-fallback paths of
+`find_mood_reference_scenes` — captured against an actual local test index, not fabricated.
 
 ---
 

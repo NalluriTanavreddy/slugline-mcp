@@ -65,7 +65,7 @@ Work through these in order, one commit per task. Each task = one commit.
 ## Phase 7 — Docs & release
 - [x] `docs: write full README usage guide`
 - [x] `docs: add CONTRIBUTING.md`
-- [ ] `docs: add demo walkthrough`
+- [x] `docs: add demo walkthrough`
 - [ ] `chore: bump version to 0.1.0`
 - [ ] `chore: tag v0.1.0 release`
 
