@@ -54,7 +54,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `chore: add build and twine as dev dependencies`
 - [x] `chore: set up versioning scheme`
 - [x] `test: verify local install via uv pip install -e .`
-- [ ] `test: verify uvx slugline-mcp run works end-to-end`
+- [x] `test: verify uvx slugline-mcp run works end-to-end`
 
 ## Phase 6 — CI/CD
 - [ ] `ci: add GitHub Actions build + test workflow`
