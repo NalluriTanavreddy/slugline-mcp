@@ -72,3 +72,4 @@ Work through these in order, one commit per task. Each task = one commit.
 - [ ] `chore: build distribution artifacts`
 - [ ] `chore: publish slugline-mcp to TestPyPI and verify install`
 - [ ] `chore: publish slugline-mcp to PyPI`
+- [ ] `feat: rotate PyPI/TestPyPI tokens to project-scoped after first successful publish`
