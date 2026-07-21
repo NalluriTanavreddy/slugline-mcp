@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "slugline-mcp"
-version = "0.0.1"
+version = "0.1.0"
 description = "MCP server for brutal, evidence-based screenplay analysis via retrieval over a reference database of real scripts."
 readme = "README.md"
 license = "MIT"
