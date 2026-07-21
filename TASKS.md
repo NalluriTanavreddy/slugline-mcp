@@ -51,7 +51,7 @@ Work through these in order, one commit per task. Each task = one commit.
 
 ## Phase 5 — Packaging
 - [x] `chore: add project.scripts entry point (slugline-mcp)`
-- [ ] `chore: add build and twine as dev dependencies`
+- [x] `chore: add build and twine as dev dependencies`
 - [ ] `chore: set up versioning scheme`
 - [ ] `test: verify local install via uv pip install -e .`
 - [ ] `test: verify uvx slugline-mcp run works end-to-end`
