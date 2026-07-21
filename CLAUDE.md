@@ -2,9 +2,9 @@
 
 Read `TASKS.md` first — it's the authoritative build checklist (one commit per
 task, top to bottom). This file is context to avoid re-deriving decisions
-already made. As of this writing: **Phases 0–5 are complete and pushed to
-`origin/main`.** Next up is Phase 6 (CI/CD) — **stop and ask before starting
-it**, per the working agreement below.
+already made. As of this writing: **Phases 0–6 are complete and pushed to
+`origin/main`.** Next up is Phase 7 (Docs & release) — no stop-and-ask needed
+for Phase 7 itself, but **Phase 8 (Publish) still requires asking first**.
 
 ## Working agreement (from the user)
 
@@ -43,7 +43,20 @@ it**, per the working agreement below.
 - Mood taxonomy (fixed 7 labels, from `mood_tagging.CANDIDATE_MOODS`):
   paranoid, romantic tension, tense, comedic, dread, melancholic, triumphant.
 - GitHub remote already exists and is linked: `NalluriTanavreddy/slugline-mcp`
-  (confirmed reachable, currently pushed through Phase 4).
+  (confirmed reachable, currently pushed through Phase 6).
+- GitHub Actions secrets `PYPI_API_TOKEN` and `TEST_PYPI_API_TOKEN` are
+  already set in repo settings (added by the user before Phase 6). CI
+  workflows reference them via `${{ secrets.* }}`; never hardcode or print
+  them. `PYPI_API_TOKEN` is presumably an account-scoped token for now --
+  the queued Phase 8 task `feat: rotate PyPI/TestPyPI tokens to
+  project-scoped after first successful publish` exists because
+  project-scoped tokens can only be created once the project exists on
+  PyPI, i.e. after the very first publish.
+- Publish workflow triggers are deliberately narrow (user constraint):
+  `publish-pypi.yml` fires ONLY on a `vX.Y.Z` tag push;
+  `publish-testpypi.yml` is `workflow_dispatch`-only (manual). Neither has
+  ever actually been run -- Phase 8 is what triggers them for real, and that
+  phase requires asking first.
 
 ## Architecture in one paragraph
 
@@ -106,15 +119,18 @@ uv run mcp dev src/slugline_mcp/server.py:mcp
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 6 — CI/CD**: ASK FIRST. GitHub Actions build/test + PyPI/TestPyPI
-  publish workflows — involves secrets.
 - **Phase 7 — Docs & release**: full README usage guide (note: README
   already got a badges/roadmap pass in Phase 4, then a RAG/MCP-emphasis pass
   outside the TASKS.md flow — Phase 7's task should extend/polish it, not
   redo it from scratch), CONTRIBUTING, demo walkthrough (no recording exists
-  yet), bump to 0.1.0, tag release.
-- **Phase 8 — Publish**: ASK FIRST. Build artifacts, TestPyPI, then PyPI —
-  irreversible public release.
+  yet), bump to 0.1.0, tag release. Note: tagging `v0.1.0` in this phase will
+  cause `publish-pypi.yml` to fire automatically (tag-push trigger) --
+  confirm with the user before pushing that tag, even though tagging itself
+  is a Phase 7 task and publishing is nominally Phase 8.
+- **Phase 8 — Publish**: ASK FIRST. Build artifacts, TestPyPI (manually via
+  `workflow_dispatch` on `publish-testpypi.yml`, or `gh workflow run
+  publish-testpypi.yml`), then PyPI (via the `v0.1.0` tag push) — irreversible
+  public release. Then the queued token-rotation task.
 
 Also outstanding, not yet on `TASKS.md` because no task was ever specified for
 it: **the real prebuilt index has never been built or uploaded** to the HF
