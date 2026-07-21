@@ -60,6 +60,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `ci: add GitHub Actions build + test workflow`
 - [x] `ci: add GitHub Actions PyPI publish workflow`
 - [x] `ci: add TestPyPI publish step for pre-release validation`
+- [x] `fix: drop Python 3.10 support (chromadb's onnxruntime dependency no longer ships 3.10 wheels)`
 
 ## Phase 7 — Docs & release
 - [x] `docs: write full README usage guide`

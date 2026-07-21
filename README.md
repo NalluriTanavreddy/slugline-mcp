@@ -17,7 +17,7 @@ grounded evidence to Claude over MCP.
 
 [![Status](https://img.shields.io/badge/status-pre--release-orange)](TASKS.md)
 [![Architecture](https://img.shields.io/badge/architecture-RAG_pipeline-8a2be2)](#-how-the-rag-pipeline-works)
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-server-black)](https://modelcontextprotocol.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/NalluriTanavreddy/slugline-mcp?style=flat&color=yellow)](https://github.com/NalluriTanavreddy/slugline-mcp/stargazers)
@@ -149,7 +149,7 @@ retrieval half, and the MCP tool boundary is exactly where that handoff happens.
 | Layer | Choice |
 |---|---|
 | Architecture pattern | RAG (retrieval-augmented generation), exposed entirely as MCP tools |
-| Language | Python 3.10+ |
+| Language | Python 3.11+ |
 | MCP framework | Official `mcp` Python SDK (FastMCP) |
 | Embeddings / vector search | sentence-transformers (`all-MiniLM-L6-v2`) + Chroma ANN search |
 | Vector database | [Chroma](https://www.trychroma.com/) (persistent, local) |
@@ -166,7 +166,7 @@ retrieval half, and the MCP tool boundary is exactly where that handoff happens.
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.11+
 - [uv](https://docs.astral.sh/uv/)
 
 ### Install

@@ -29,8 +29,8 @@ for Phase 7 itself, but **Phase 8 (Publish) still requires asking first**.
 
 ## Decisions already made (don't re-ask)
 
-- License: MIT. Python: 3.10+. Embedding model:
-  `sentence-transformers/all-MiniLM-L6-v2`.
+- License: MIT. Python: **3.11+** (originally 3.10+, bumped during Phase 7 --
+  see below). Embedding model: `sentence-transformers/all-MiniLM-L6-v2`.
 - Prebuilt index hosting: a Hugging Face Hub **dataset repo**, id
   `NalluriTanavreddy/slugline-mcp-index` (default in
   `bootstrap.DEFAULT_INDEX_REPO_ID`, overridable via
@@ -95,6 +95,15 @@ shape via `tools/_formatting.format_scene`) are registered onto the
   `Annotated[type, Field(description=...)]`. All tool functions use that
   pattern now instead of docstring `Args:` sections for parameters (return
   value docs are still fine as plain docstring prose).
+- **Python 3.10 support was dropped in Phase 7**, discovered when the CI
+  build+test workflow failed on `test (3.10)` only (3.11/3.12 passed).
+  Root cause: `chromadb` hard-depends on `onnxruntime` (for its bundled
+  default embedding function, which we don't use), and the `onnxruntime`
+  version that resolves no longer ships a `cp310` wheel at all -- there's no
+  version pin that fixes this without dragging in a stale `chromadb`.
+  `requires-python` is now `>=3.11` everywhere (`pyproject.toml`,
+  `ci.yml`'s matrix, README). Don't reintroduce 3.10 without first checking
+  `uv sync --python 3.10` actually resolves.
 
 ## Useful commands
 
