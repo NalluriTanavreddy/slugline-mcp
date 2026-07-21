@@ -57,7 +57,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `test: verify uvx slugline-mcp run works end-to-end`
 
 ## Phase 6 — CI/CD
-- [ ] `ci: add GitHub Actions build + test workflow`
+- [x] `ci: add GitHub Actions build + test workflow`
 - [ ] `ci: add GitHub Actions PyPI publish workflow`
 - [ ] `ci: add TestPyPI publish step for pre-release validation`
 
