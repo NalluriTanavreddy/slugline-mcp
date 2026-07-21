@@ -3,10 +3,11 @@
 Read `TASKS.md` first — it's the authoritative build checklist (one commit per
 task, top to bottom). This file is context to avoid re-deriving decisions
 already made. As of this writing: **slugline-mcp v0.1.0 is published on real
-PyPI** (https://pypi.org/project/slugline-mcp/) and TestPyPI. Phases 0–8 are
-essentially complete; all commits are pushed to `origin/main`. The only
-thing left anywhere on `TASKS.md` is the queued token-rotation task (see
-below) -- everything else is done.
+PyPI** (https://pypi.org/project/slugline-mcp/) and TestPyPI, and **every
+task on `TASKS.md` is checked off**, including the post-publish token
+rotation. All commits are pushed to `origin/main`. There is no active
+TASKS.md work queued right now -- see "Also outstanding" below for the one
+real functional gap that remains (the reference index).
 
 **Never reuse cached git/GitHub credentials for anything beyond `git push`/
 `git pull`.** If a task needs GitHub API access (dispatching workflows,
@@ -63,19 +64,17 @@ the README's quick-start and demo docs; don't let anyone believe a fresh
   paranoid, romantic tension, tense, comedic, dread, melancholic, triumphant.
 - GitHub remote already exists and is linked: `NalluriTanavreddy/slugline-mcp`
   (confirmed reachable, currently pushed through Phase 6).
-- GitHub Actions secrets `PYPI_API_TOKEN` and `TEST_PYPI_API_TOKEN` are
-  already set in repo settings (added by the user before Phase 6). CI
-  workflows reference them via `${{ secrets.* }}`; never hardcode or print
-  them. `PYPI_API_TOKEN` is presumably an account-scoped token for now --
-  the queued Phase 8 task `feat: rotate PyPI/TestPyPI tokens to
-  project-scoped after first successful publish` exists because
-  project-scoped tokens can only be created once the project exists on
-  PyPI, i.e. after the very first publish.
+- GitHub Actions secrets `PYPI_API_TOKEN` and `TEST_PYPI_API_TOKEN` are set
+  in repo settings (added by the user before Phase 6, **rotated by the user
+  to project-scoped tokens** -- scoped to `slugline-mcp` specifically --
+  after the first successful publish; previously account-wide). No CI/publish
+  workflow behavior changed, just tighter token scope. CI workflows
+  reference them via `${{ secrets.* }}`; never hardcode or print them.
 - Publish workflow triggers are deliberately narrow (user constraint):
   `publish-pypi.yml` fires ONLY on a `vX.Y.Z` tag push;
-  `publish-testpypi.yml` is `workflow_dispatch`-only (manual). Neither has
-  ever actually been run -- Phase 8 is what triggers them for real, and that
-  phase requires asking first.
+  `publish-testpypi.yml` is `workflow_dispatch`-only (manual). Both have now
+  actually been run successfully (see "What's left" below) -- `v0.1.0` is
+  live on both TestPyPI and real PyPI.
 
 ## Architecture in one paragraph
 
@@ -147,13 +146,14 @@ uv run mcp dev src/slugline_mcp/server.py:mcp
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 8 — Publish**: everything is done except the queued
-  `feat: rotate PyPI/TestPyPI tokens to project-scoped after first
-  successful publish` task. That requires the user's own PyPI/TestPyPI
-  account access (creating project-scoped tokens, updating the
-  `PYPI_API_TOKEN`/`TEST_PYPI_API_TOKEN` GitHub secrets) -- not something to
-  attempt by finding/reusing credentials; ask the user to do it or to
-  explicitly hand over what's needed.
+**Everything on `TASKS.md` is checked off, including the token-rotation
+task.** `PYPI_API_TOKEN` / `TEST_PYPI_API_TOKEN` are now project-scoped
+(rotated by the user, not by Claude -- this needed their own PyPI/TestPyPI
+account access). No CI/workflow changes required; same secret names, same
+`${{ secrets.* }}` references, just tighter scope on the token values
+themselves.
+
+- **Phase 8 — Publish**: full history for context --
 
   TestPyPI publish: `publish-testpypi.yml` was manually dispatched via the
   GitHub REST API (this predates the credential-scope rule above -- won't
