@@ -50,7 +50,7 @@ Work through these in order, one commit per task. Each task = one commit.
 - [x] `docs: give README a proper badges/features/roadmap treatment`
 
 ## Phase 5 — Packaging
-- [ ] `chore: add project.scripts entry point (slugline-mcp)`
+- [x] `chore: add project.scripts entry point (slugline-mcp)`
 - [ ] `chore: add build and twine as dev dependencies`
 - [ ] `chore: set up versioning scheme`
 - [ ] `test: verify local install via uv pip install -e .`

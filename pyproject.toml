@@ -36,6 +36,9 @@ index = [
 [project.urls]
 Homepage = "https://github.com/NalluriTanavreddy/slugline-mcp"
 
+[project.scripts]
+slugline-mcp = "slugline_mcp.__main__:main"
+
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
