@@ -2,9 +2,15 @@
 
 Read `TASKS.md` first — it's the authoritative build checklist (one commit per
 task, top to bottom). This file is context to avoid re-deriving decisions
-already made. As of this writing: **Phases 0–6 are complete and pushed to
-`origin/main`.** Next up is Phase 7 (Docs & release) — no stop-and-ask needed
-for Phase 7 itself, but **Phase 8 (Publish) still requires asking first**.
+already made. As of this writing: **Phases 0–7 are complete; all commits are
+pushed to `origin/main`.** Next up is Phase 8 (Publish) — **ask first**.
+
+**Important:** a `v0.1.0` git tag exists **locally** (created for Phase 7's
+"tag v0.1.0 release" task) but has **not** been pushed. Pushing it
+(`git push origin v0.1.0` / `git push --tags`) will automatically trigger
+`publish-pypi.yml` (its only trigger is a `v*.*.*` tag push) -- i.e. pushing
+the tag *is* the real PyPI publish, not a separate step. Don't push it
+without the user explicitly confirming Phase 8 first.
 
 ## Working agreement (from the user)
 
@@ -128,18 +134,11 @@ uv run mcp dev src/slugline_mcp/server.py:mcp
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 7 — Docs & release**: full README usage guide (note: README
-  already got a badges/roadmap pass in Phase 4, then a RAG/MCP-emphasis pass
-  outside the TASKS.md flow — Phase 7's task should extend/polish it, not
-  redo it from scratch), CONTRIBUTING, demo walkthrough (no recording exists
-  yet), bump to 0.1.0, tag release. Note: tagging `v0.1.0` in this phase will
-  cause `publish-pypi.yml` to fire automatically (tag-push trigger) --
-  confirm with the user before pushing that tag, even though tagging itself
-  is a Phase 7 task and publishing is nominally Phase 8.
 - **Phase 8 — Publish**: ASK FIRST. Build artifacts, TestPyPI (manually via
   `workflow_dispatch` on `publish-testpypi.yml`, or `gh workflow run
-  publish-testpypi.yml`), then PyPI (via the `v0.1.0` tag push) — irreversible
-  public release. Then the queued token-rotation task.
+  publish-testpypi.yml`), then PyPI (by pushing the already-created local
+  `v0.1.0` tag) — irreversible public release. Then the queued
+  token-rotation task.
 
 Also outstanding, not yet on `TASKS.md` because no task was ever specified for
 it: **the real prebuilt index has never been built or uploaded** to the HF
