@@ -2,8 +2,9 @@
 
 Read `TASKS.md` first — it's the authoritative build checklist (one commit per
 task, top to bottom). This file is context to avoid re-deriving decisions
-already made. As of this writing: **Phases 0–4 are complete and pushed to
-`origin/main`.** Next up is Phase 5 (Packaging).
+already made. As of this writing: **Phases 0–5 are complete and pushed to
+`origin/main`.** Next up is Phase 6 (CI/CD) — **stop and ask before starting
+it**, per the working agreement below.
 
 ## Working agreement (from the user)
 
@@ -21,6 +22,10 @@ already made. As of this writing: **Phases 0–4 are complete and pushed to
   specify, and if the insertion point is *before* where work already is,
   implement it immediately (out of order) before continuing; if it's ahead
   of current progress, just queue it and reach it in normal order.
+- **Every commit message now ends with a `Co-Authored-By: Claude Sonnet 5
+  <noreply@anthropic.com>` trailer** (instruction given at the start of the
+  Phase 5 session, applies from that point forward — earlier commits don't
+  have it, don't go back and rewrite history to add it).
 
 ## Decisions already made (don't re-ask)
 
@@ -93,19 +98,21 @@ uv sync --extra index
 
 # interactive tool testing
 uv run mcp dev src/slugline_mcp/server.py:mcp
+
+# verify packaging (Phase 5 scripts, safe to re-run anytime)
+./scripts/verify_local_install.sh   # uv pip install -e . in an isolated venv
+./scripts/verify_uvx_run.sh          # builds a wheel, runs it via `uvx --from`
 ```
 
 ## What's left (see TASKS.md for full detail)
 
-- **Phase 5 — Packaging**: console entry point (`project.scripts`), build/twine
-  dev deps, versioning scheme, verify `uv pip install -e .` and `uvx
-  slugline-mcp run` work.
 - **Phase 6 — CI/CD**: ASK FIRST. GitHub Actions build/test + PyPI/TestPyPI
   publish workflows — involves secrets.
 - **Phase 7 — Docs & release**: full README usage guide (note: README
-  already got a badges/roadmap pass in Phase 4 at the user's request — Phase
-  7's task should extend/polish it, not redo it from scratch), CONTRIBUTING,
-  demo walkthrough (no recording exists yet), bump to 0.1.0, tag release.
+  already got a badges/roadmap pass in Phase 4, then a RAG/MCP-emphasis pass
+  outside the TASKS.md flow — Phase 7's task should extend/polish it, not
+  redo it from scratch), CONTRIBUTING, demo walkthrough (no recording exists
+  yet), bump to 0.1.0, tag release.
 - **Phase 8 — Publish**: ASK FIRST. Build artifacts, TestPyPI, then PyPI —
   irreversible public release.
 
@@ -113,5 +120,24 @@ Also outstanding, not yet on `TASKS.md` because no task was ever specified for
 it: **the real prebuilt index has never been built or uploaded** to the HF
 Hub repo referenced by `bootstrap.py`. End-to-end testing (`uvx slugline-mcp`
 actually returning real results out of the box) will need either that upload
-to happen, or a documented manual `build_index.py` run. Flag this to the user
-when Phase 5's "verify uvx slugline-mcp run works end-to-end" task comes up.
+to happen, or a documented manual `build_index.py` run. Phase 5's install/uvx
+verification tasks (`scripts/verify_local_install.sh`,
+`scripts/verify_uvx_run.sh`) only check the package installs and the console
+script starts cleanly -- they don't (and can't yet) verify real retrieval
+results, since there's no published index to fetch.
+
+## Post-Phase-4 additions (outside the original TASKS.md flow)
+
+- **Hybrid mood search**: `find_mood_reference_scenes` no longer only does
+  exact tag-filtered matching. It now embeds `target_mood`, compares it
+  (cosine similarity) against the 7 precoded tag embeddings
+  (`mood_tagging.get_candidate_mood_embeddings`), and if similarity >=
+  `retrieval.MOOD_TAG_MATCH_THRESHOLD` (0.45, empirically calibrated against
+  all-MiniLM-L6-v2) uses the precise tag-filtered path; otherwise it falls
+  back to raw nearest-neighbor search ignoring tags entirely, so any
+  free-text mood still returns something. The tool's return shape changed
+  from a bare list to `{method, matched_tag, tag_similarity, results}`. See
+  `retrieval.Retriever.search_scenes_by_mood` / `MoodSearchResult`.
+- README got an additive RAG/MCP-emphasis pass (badges, a new "How the RAG
+  Pipeline Works" section) at the user's request, on top of the Phase 4
+  badges/roadmap pass -- both are additive, nothing was removed.
